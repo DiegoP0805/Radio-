@@ -26,6 +26,11 @@ public class radio implements Interface
         }
     }
 
+    public boolean getonOff()
+    {
+        return onOff;
+    }
+
 
     public void setfrecuencia()//metodo para cambiar de precuencia
     {
@@ -39,104 +44,118 @@ public class radio implements Interface
         }
     }
 
-    public String getfrecuencia()//devuelve la frecuencia como un string para imprimir
+    public boolean getamFm()//devuelve la frecuencia como un boolean
     {
-        if(frecuencia) 
+        return frecuencia;
+    }
+
+    @Override
+    public boolean amFm()//metodo para cambiar la frecuencia
+    {
+        setfrecuencia();
+        //avanzar();//arregla esto
+        if(getamFm())
         {
-            return "Frecuencia Am";
+            setEstacion(87.9);
         }
         else
         {
-            return "Frecuencia Fm";
+            setEstacion(530);
         }
+        return getamFm();
     }
 
-    public double avanzar(){//metodo para avanzar entre emisoras
-		if(frecuencia){
-			if(estacion==107.9){
-				return 87.9;
+    @Override
+    public boolean encenderApagar()//metodo para apagar o encender
+    {
+        setonOff();    
+        return getonOff();
+    }
+
+    public void setEstacion(double estacion) 
+    {
+        this.estacion = estacion;
+    }
+
+    public double getEstacion() 
+    {
+        return estacion;
+    }
+
+    @Override
+    public double avanzar()//metodo para avanzar entre emisoras
+    {
+        if(getamFm()){
+			if(getEstacion()==107.9 || getEstacion() == 0.0){
+                setEstacion(87.9);
+				return getEstacion();
 			}else{
-				return estacion+0.2;
+                setEstacion(getEstacion() + 0.2);
+                return getEstacion();
 			}
 		}else{
-			if(estacion==1610){
-				return 530;
+			if(getEstacion() ==1610.0 || getEstacion() == 0.0){
+				setEstacion(530.0);
+				return getEstacion();
 			}else{
-				return estacion+10;
+				setEstacion(getEstacion() + 10.0);
+                return getEstacion();
 			}
 		}
-	}
+    }
+
 
     public radio()
     {
         onOff = false;
-        estacion = 0;
-        frecuencia = false;
+        estacion = 0.0;
+        frecuencia = false ;
         botones =  new Double[]{0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0};
     }
 
-
-    public boolean check(String s)//Método para checar si un string es numérico
+    @Override
+    public String guardar(int btn) 
     {
-        boolean numeric = true;
-        try 
-        {
-            int n = Integer.parseInt(s);
-        } 
-        catch (NumberFormatException e) 
-        {
-            numeric = false;
-        }
-
-        if(numeric)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        botones[btn] = getEstacion();
+        return Double.toString(botones[btn]);
     }
 
-    public boolean rango(int min, int max, int x)//metodo para verificar que un num está en rango
+    @Override
+    public String seleccionar(int btn) 
     {
-        if (x > min && x <= max)
+        if(botones[btn] >= 87.9 && botones[btn] <= 107.9)
         {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-    
-    
-    public boolean option(String e, int i, int j)//clase validadora
-    {
-        if (check(e))
-        {
-            int n = Integer.parseInt(e);
-            if(rango(i, j, n))
+            if(getamFm())
             {
-                return true;
+                setEstacion(botones[btn]);
+                return Double.toString(getEstacion());
             }
             else
             {
-                return false;
+                setfrecuencia();
+                setEstacion(botones[btn]);
+                return Double.toString(getEstacion());  
+            }
+            
+        }
+        else if(botones[btn] >= 530.0 && botones[btn] <= 1610.0)
+        {
+            if(getamFm())
+            {
+                setfrecuencia();
+                setEstacion(botones[btn]);
+                return Double.toString(getEstacion());
+            }
+            else
+            {
+                setEstacion(botones[btn]);
+                return Double.toString(getEstacion());
             }
         }
         else
         {
-            return false; 
+            return "No hay estacion guardada en este boton";
         }
     }
 
-
-
-
-    public static void main(String[] args) 
-    {
-        radio r = new radio();
-        System.out.println(r.botones.length);
-    }
 }
