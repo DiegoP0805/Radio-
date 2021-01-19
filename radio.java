@@ -4,7 +4,7 @@ import java.util.ArrayList;
 Programadores: Diego Perdomo Sagastume y Ana Gabriela Ramírez
 Nombre del programa: radio.java (depende de Interface.java)
 Lengaje: Java
-Fecha de modificación: 16/01/21
+Fecha de modificación: 17/01/21
 */
 public class radio implements Interface
 {
@@ -105,7 +105,7 @@ public class radio implements Interface
     }
 
 
-    public radio()
+    public radio()//se le otorga valores a las variables de radio
     {
         onOff = false;
         estacion = 0.0;
@@ -114,16 +114,16 @@ public class radio implements Interface
     }
 
     @Override
-    public String guardar(int btn) 
+    public String guardar(int btn) //metodo para guarrdar una estación en un botón, funciona con array
     {
         botones[btn] = getEstacion();
         return Double.toString(botones[btn]);
     }
 
     @Override
-    public String seleccionar(int btn) 
+    public String seleccionar(int btn) //metodo validador para cuando se quiera seleccionar un botón para sintonizar una emisora
     {
-        if(botones[btn] >= 87.9 && botones[btn] <= 107.9)
+        if(botones[btn] >= 87.9 && botones[btn] <= 107.9)//para fm
         {
             if(getamFm())
             {
@@ -138,7 +138,7 @@ public class radio implements Interface
             }
             
         }
-        else if(botones[btn] >= 530.0 && botones[btn] <= 1610.0)
+        else if(botones[btn] >= 530.0 && botones[btn] <= 1610.0)//para am
         {
             if(getamFm())
             {
@@ -152,7 +152,7 @@ public class radio implements Interface
                 return Double.toString(getEstacion());
             }
         }
-        else
+        else//no se puede sintonizar la estación de un botón que no tiene nada guardado
         {
             return "No hay estacion guardada en este boton";
         }
